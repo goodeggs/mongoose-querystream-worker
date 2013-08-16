@@ -1,0 +1,30 @@
+{
+  "name": "mongoose-querystream-worker",
+  "version": "0.0.0",
+  "description": "Execute an async function per document in a streamed query, pausing the stream when a concurrency limit is saturated",
+  "main": "mongoose-querystream-worker.js",
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/goodeggs/mongoose-querystream-worker.git"
+  },
+  "keywords": [
+    "mongoose",
+    "querystream",
+    "worker",
+    "queue"
+  ],
+  "author": "Good Eggs <eng@goodeggs.com>",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "gitHead": "a39913da83703f67e608426e275aad9effff8fbc",
+  "devDependencies": {
+    "mocha": "~1.12.0",
+    "mongoose": "~3.6.17"
+  },
+  "dependencies": {
+    "stream-worker": "0.0.0"
+  }
+}
