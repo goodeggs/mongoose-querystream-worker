@@ -1,6 +1,6 @@
 {
   "name": "mongoose-querystream-worker",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Execute an async function per document in a streamed query, pausing the stream when a concurrency limit is saturated",
   "main": "mongoose-querystream-worker.js",
   "scripts": {
@@ -25,6 +25,6 @@
     "mongoose": "~3.6.17"
   },
   "dependencies": {
-    "stream-worker": "0.0.0"
+    "stream-worker": ">=0.0.1"
   }
 }
