@@ -1,7 +1,7 @@
 /**
  * Test dependencies.
  */
- require('..');
+require('..');
 
 var start = require('./common')
   , assert = require('assert')
@@ -9,6 +9,7 @@ var start = require('./common')
   , utils = require('mongoose/lib/utils')
   , random = utils.random
   , Schema = mongoose.Schema
+  , Promise = require('bluebird')
 
 var names = ('Aaden Aaron Adrian Aditya Agustin Jim Bob Jonah Frank Sally Lucy').split(' ');
 
@@ -16,8 +17,8 @@ var names = ('Aaden Aaron Adrian Aditya Agustin Jim Bob Jonah Frank Sally Lucy')
  * Setup.
  */
 
- var Person = new Schema({
-    name: String
+var Person = new Schema({
+  name: String
 });
 
 mongoose.model('PersonForStream', Person);
@@ -39,7 +40,19 @@ describe('query stream worker:', function(){
     });
   });
 
-  it('invokes a worker for each doc', function(done){
+  it('invokes a worker (promise-style) for each doc', function(){
+    var db = start()
+      , P = db.model('PersonForStream', collection)
+      , i = 0
+
+    return P.find().stream().work(function(doc) {
+      i++
+    }).then(function() {
+      assert.equal(i, names.length);
+    });
+  });
+
+  it('invokes a worker (callback-style) for each doc', function(done){
     var db = start()
       , P = db.model('PersonForStream', collection)
       , i = 0
@@ -72,7 +85,8 @@ describe('query stream worker:', function(){
       testDone();
     }
 
-    var stream = P.find().stream().concurrency(concurrencyLimit).work(worker, testDone);
+    var stream = P.find().stream();
+    stream.concurrency(concurrencyLimit).work(worker, testDone);
 
     function checkWorkers () {
       assert(workers.length <= concurrencyLimit, 'the concurrency limit is never exceeded');
