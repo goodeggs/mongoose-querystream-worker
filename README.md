@@ -6,12 +6,26 @@ Execute an async function per document in a streamed query, pausing the stream w
 ```js
 require('mongoose-querystream-worker');
 
+/* Promises: */
+
+Model.find().stream().concurrency(n).work(function (doc) {
+  /* ... work with the doc ... */ 
+  return doc.save(); /* returns a promise */
+})
+.then(function() {
+  /* ...  all workers have finished ... */
+}, function(err) {
+  /* ...  something went wrong ... */
+});
+
+/* Callbacks: */
+
 Model.find().stream().concurrency(n).work(
   function (doc, done) {
-   /* ... work with the doc ... */ 
-  }, 
+    /* ... work with the doc ... */
+  },
   function (err) {
-   /* ...  all workers have finished ... */
+    /* ...  all workers have finished ... */
   }
-});
+);
 ```

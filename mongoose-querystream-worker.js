@@ -9,6 +9,5 @@ QueryStream.prototype.concurrency = function (max) {
 
 QueryStream.prototype.work = function (worker, done) {
   var concurrency = this._concurrency || DEFAULT_CONCURRENCY_LIMIT;
-  streamWorker(this, concurrency, worker, done);
-  return this;
+  return streamWorker(this, concurrency, worker, done);
 };
