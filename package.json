@@ -21,12 +21,12 @@
   "readmeFilename": "README.md",
   "gitHead": "a39913da83703f67e608426e275aad9effff8fbc",
   "devDependencies": {
-    "mocha": "^2.3.4",
-    "mongoose": "~3.6.17"
+    "mocha": "^2.0.0",
+    "mongoose": "^4.0.0"
   },
   "dependencies": {
-    "bluebird": "^3.1.1",
-    "stream-worker": "^1.0.0"
+    "bluebird": "~3.3.0",
+    "stream-worker": "~1.0.0"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
