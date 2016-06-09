@@ -7,7 +7,8 @@ QueryStream.prototype.concurrency = function (max) {
   return this;
 };
 
-QueryStream.prototype.work = function (worker, done) {
-  var concurrency = this._concurrency || DEFAULT_CONCURRENCY_LIMIT;
-  return streamWorker(this, concurrency, worker, done);
+QueryStream.prototype.work = function (worker, options, done) {
+  options = options || { };
+  if (!options.concurrency) options.concurrency = this._concurrency || DEFAULT_CONCURRENCY_LIMIT;
+  return streamWorker(this, worker, options, done);
 };
