@@ -40,15 +40,16 @@ describe('query stream worker:', function(){
     });
   });
 
-  it('invokes a worker (promise-style) for each doc', function(){
+  it('invokes a worker (promise-style) for each doc', function(done){
     var db = start()
       , P = db.model('PersonForStream', collection)
       , i = 0
 
     return P.find().stream().work(function(doc) {
       i++
-    }).then(function() {
+    }, {promises : true}).then(function() {
       assert.equal(i, names.length);
+      done();
     });
   });
 
@@ -61,7 +62,7 @@ describe('query stream worker:', function(){
       function(doc, done) {
         i++;
         done();
-      },
+      },{promises : false},
       function(err) {
         assert.equal(i, names.length);
         done();
@@ -86,7 +87,7 @@ describe('query stream worker:', function(){
     }
 
     var stream = P.find().stream();
-    stream.concurrency(concurrencyLimit).work(worker, testDone);
+    stream.concurrency(concurrencyLimit).work(worker, {}, testDone);
 
     function checkWorkers () {
       assert(workers.length <= concurrencyLimit, 'the concurrency limit is never exceeded');
