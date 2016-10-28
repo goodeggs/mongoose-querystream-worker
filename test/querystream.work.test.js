@@ -45,7 +45,7 @@ describe('query stream worker:', function(){
       , P = db.model('PersonForStream', collection)
       , i = 0
 
-    return P.find().stream().work(function(doc) {
+    return P.find().cursor().work(function(doc) {
       i++
     }, {promises : true}).then(function() {
       assert.equal(i, names.length);
@@ -58,7 +58,7 @@ describe('query stream worker:', function(){
       , P = db.model('PersonForStream', collection)
       , i = 0
 
-    var stream = P.find().stream().work(
+    var stream = P.find().cursor().work(
       function(doc, done) {
         i++;
         done();
@@ -76,34 +76,24 @@ describe('query stream worker:', function(){
       , workers = []
       , docCount = 0
       , concurrencyLimit = 2
-      , i = 0
 
     function worker (doc, done) {
       workers.push({done: done});
     }
 
-    function workFinished (err) {
-      testDone();
-    }
-
-    var stream = P.find().stream();
+    var stream = P.find().cursor();
     stream.concurrency(concurrencyLimit).work(worker, {}, testDone);
 
     function checkWorkers () {
       assert(workers.length <= concurrencyLimit, 'the concurrency limit is never exceeded');
 
-      var oldDocCount = ++docCount;
+      docCount += 1;
       if(docCount <= concurrencyLimit) {
-        process.nextTick(function () {
-          assert(docCount > oldDocCount, 'not yet saturated, expect another worker to be started');
-        });
+        assert(stream._readableState.flowing, 'not yet saturated, expect another worker to be started');
       } else if (docCount == concurrencyLimit) {
-        process.nextTick(function () {
-          assert(docCount == oldDocCount, 'now we\'re saturated, no more workers');
-
-          // good, now free up a  worker
-          workers.pop().done();
-        });
+        assert(!stream._readableState.flowing, 'now we\'re saturated, no more workers');
+        workers.pop().done();
+        assert(stream._readableState.flowing, 'worker freed up, resume');
       } else {
         // check passed, burn the rest of the stream
         while(workers.length) {
@@ -112,9 +102,6 @@ describe('query stream worker:', function(){
       }
     }
 
-    stream.on('data', function() {
-      // nextTick to make sure worker has started
-      process.nextTick(checkWorkers);
-    });
+    stream.on('data', checkWorkers);
   });
 });
