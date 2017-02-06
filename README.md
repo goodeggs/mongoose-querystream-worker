@@ -13,7 +13,7 @@ require('mongoose-querystream-worker');
 Model.find().stream().concurrency(n).work(function (doc) {
   /* ... work with the doc ... */ 
   return doc.save(); /* returns a promise */
-})
+}, {promises: true})
 .then(function() {
   /* ...  all workers have finished ... */
 }, function(err) {
