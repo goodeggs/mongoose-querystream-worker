@@ -22,7 +22,7 @@
   "gitHead": "a39913da83703f67e608426e275aad9effff8fbc",
   "devDependencies": {
     "mocha": "^2.0.0",
-    "mongoose": "^4.0.0"
+    "mongoose": "^4.5.0"
   },
   "dependencies": {
     "bluebird": "~3.3.0",

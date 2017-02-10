@@ -10,8 +10,8 @@ require('mongoose-querystream-worker');
 
 /* Promises: */
 
-Model.find().stream().concurrency(n).work(function (doc) {
-  /* ... work with the doc ... */ 
+Model.find().cursor().concurrency(n).work(function (doc) {
+  /* ... work with the doc ... */
   return doc.save(); /* returns a promise */
 }, {promises: true})
 .then(function() {
@@ -22,7 +22,7 @@ Model.find().stream().concurrency(n).work(function (doc) {
 
 /* Callbacks: */
 
-Model.find().stream().concurrency(n).work(
+Model.find().cursor().concurrency(n).work(
   function (doc, done) {
     /* ... work with the doc ... */
   },
